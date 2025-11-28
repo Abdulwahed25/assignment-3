@@ -1,127 +1,75 @@
 :root {
   --primary-bg: #f0f8ff;
   --main-bg: #ffffff;
-  --text-color: #333;
+  --text-color: #222;
   --header-footer-bg: #005f73;
-  
+
   --card-bg: #ffffff;
   --card-border: #ddd;
   --form-btn-bg: #0077b6;
-  
+
   --filter-btn-color: #0077b6;
   --filter-btn-bg: white;
   --active-filter-bg: #005f73;
-  
+
   --error-color: #cc0000;
 }
 
 body.dark-mode {
-  --primary-bg: #1a1a1a;
-  --main-bg: #2a2a2a;
+  --primary-bg: #121212;
+  --main-bg: #1e1e1e;
   --text-color: #e0e0e0;
-  --header-footer-bg: #000;
-  
-  --card-bg: #2a2a2a;
-  --card-border: #444;
+  --header-footer-bg: #0b3a3a;
+
+  --card-bg: #1e1e1e;
+  --card-border: #333;
   --form-btn-bg: #0099e6;
-  
+
   --filter-btn-color: #fff;
   --filter-btn-bg: #333;
   --active-filter-bg: #0099e6;
 }
 
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
   background-color: var(--primary-bg);
   color: var(--text-color);
-  transition: background-color 0.5s ease, color 0.5s ease; 
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-header, footer {
-  background-color: var(--header-footer-bg);
-  color: white;
-  text-align: center;
-  padding: 20px;
-}
+header, footer { background-color: var(--header-footer-bg); color: white; text-align: center; padding: 20px; }
+.header-inner { display: flex; flex-direction: column; gap: 10px; align-items: center; }
+.controls { display:flex; gap:10px; align-items:center; }
 
-main {
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 10px;
-  background-color: var(--main-bg);
-}
+main { max-width: 1000px; margin: 20px auto; padding: 12px; background-color: var(--main-bg); border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.05); }
+section { padding: 18px; border-bottom: 1px solid var(--card-border); }
 
-section {
-  padding: 20px;
-  border-bottom: 1px solid var(--card-border); 
-}
+.projects-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-top: 16px; }
+.project-card { background-color: var(--card-bg); border: 1px solid var(--card-border); padding: 12px; border-radius: 8px; transition: transform 0.25s ease, box-shadow 0.25s ease; }
+.project-card:hover { transform: translateY(-4px); box-shadow: 0 10px 20px rgba(0,0,0,0.08); }
+.project-card img { width:100%; height:160px; object-fit:cover; border-radius:6px; display:block; }
 
-.project-card {
-  background-color: var(--card-bg);
-  border: 1px solid var(--card-border);
-  padding: 15px;
-  margin-bottom: 15px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease; 
-}
+form { display:flex; flex-direction:column; max-width:600px; }
+form label { margin-top:8px; }
+form input, form textarea, form button { padding:8px; margin-top:6px; border-radius:6px; border:1px solid #ccc; background:transparent; color:var(--text-color); }
+form button { background-color: var(--form-btn-bg); color: white; border: none; cursor: pointer; }
 
-.project-card:hover {
-  transform: scale(1.02);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+#filter-controls button { padding:8px 12px; margin-right:8px; border:1px solid var(--filter-btn-color); background-color:var(--filter-btn-bg); color: var(--filter-btn-color); cursor:pointer; border-radius:6px; }
+#filter-controls button:hover { transform: translateY(-2px); }
+#filter-controls button.active-filter { background-color: var(--active-filter-bg); color:white; border-color:var(--active-filter-bg); font-weight:bold; }
 
-.project-card img {
-  max-width: 100%;
-  height: auto;
-}
+.error-message { color: var(--error-color); font-size:0.9em; display:none; margin-top:6px; }
 
-form {
-  display: flex;
-  flex-direction: column;
-}
+.empty-state { text-align:center; color:#555; padding:14px; }
 
-form label {
-  margin-top: 10px;
-  color: var(--text-color); 
-}
+.form-feedback { padding:10px; border-radius:6px; margin-bottom:12px; }
 
-form input, form textarea, form button {
-  padding: 10px;
-  margin-top: 5px;
-}
+.github-repos p { margin:6px 0; }
 
-form button {
-  background-color: var(--form-btn-bg);
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-
-#filter-controls button {
-  padding: 10px 15px;
-  margin-right: 10px;
-  border: 1px solid var(--filter-btn-color);
-  background-color: var(--filter-btn-bg);
-  color: var(--filter-btn-color);
-  cursor: pointer;
-  transition: all 0.3s ease; 
-  border-radius: 5px;
-}
-
-#filter-controls button:hover {
-  background-color: var(--active-filter-bg);
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-#filter-controls button.active-filter {
-  background-color: var(--active-filter-bg);
-  color: white;
-  border-color: var(--active-filter-bg);
-  font-weight: bold;
-}
-
-.error-message {
-  color: var(--error-color) !important; 
+@media (max-width:600px) {
+  .header-inner { padding: 8px; }
+  .controls { flex-direction:column; }
+  .project-card img { height: 140px; }
 }

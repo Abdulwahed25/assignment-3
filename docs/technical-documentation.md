@@ -1,40 +1,132 @@
-# Technical Documentation: Assignment 2
+# Technical Documentation: Assignment 3
 
-This explains the main parts of the interactive code for my portfolio.
-
----
-
-## 1. Dynamic Projects and Filtering
-
-The projects section is built using JavaScript data, not static HTML.
-
-* **Project Data:** All project details are stored in the **`projectsData` array** in JavaScript.
-* **How it Renders:** The `renderProjects()` function reads the data and creates the HTML code for each project card, putting it into the `#projects-container`.
-* **Filtering:** When a user clicks a filter button, the code runs the **`.filter()` method** on the data array to find matching projects, then re-runs `renderProjects()` to show the new list.
+This document explains the major interactive features and JavaScript logic used in my Assignment 3 portfolio website.
 
 ---
 
-## 2. Theme Saving (Local Storage)
+## 1. Login Simulation & Name Memory (Local Storage)
 
-The website remembers the user's Dark or Light mode choice.
+The site includes a simple login/sign-out system that uses the browser’s Local Storage to remember the user between visits.
 
-* **Saving:** When the theme button is clicked, the script saves the choice to the browser's memory using **`localStorage.setItem('theme', newTheme)`**.
-* **Loading:** The `loadTheme()` function runs when the page opens and checks **Local Storage** to instantly apply the saved theme.
+### How it works:
+- On the first visit, the page shows a **prompt** asking for the visitor’s name.
+- The name is saved using  
+  `localStorage.setItem('visitorName', name)`.
+- When the site loads again, the greeting automatically shows the stored name.
+- When the user clicks **Sign Out**:
+  - `visitorName` and `loggedIn` are removed from Local Storage
+  - The greeting resets
+  - The user is asked for their name again
+
+### Purpose:
+This feature demonstrates:
+- Local Storage usage  
+- DOM state updates  
+- Event handling  
+- Personalized UI behavior  
 
 ---
 
-## 3. Form Validation and Errors
+## 2. Theme Saving and Dark/Light Mode
 
-The contact form gives clear feedback instead of simple alerts.
+The portfolio supports dark mode, and the theme stays saved even when the page is closed.
 
-* **Validation:** The `validateForm()` function checks if the required fields are filled and if the email format is correct.
-* **Feedback:** If there are errors, red messages appear next to the fields, and a success or error banner fades in using a smooth CSS **transition** for a better user experience.
+### How it works:
+- Clicking the theme toggle applies the correct class to the `<body>`.
+- The selected theme (“dark” or “light”) is saved using:
+  `localStorage.setItem('theme', mode)`.
+- On page load, `loadTheme()` applies the stored theme automatically.
+
+### Benefit:
+This ensures consistent experience and fulfills rubric requirements for persistent UI settings.
 
 ---
 
-## 4. Code Quality (AI-Assisted CSS)
+## 3. Dynamic Projects: Rendering, Filtering, Sorting
 
-The CSS was cleaned up to make themes easier to manage.
+The projects list is generated dynamically using JavaScript, not static HTML.
 
-* **CSS Variables:** We used **CSS Custom Properties** (like `--text-color`) to define all colors in one spot. This makes switching between light and dark themes very clean and simple.
-* **Accessibility:** Using variables helped fix the text colors, making sure there is good **contrast** so the site is easy for everyone to read.
+### Project Data
+All project information is stored inside the `projectsData` array.
+
+### Rendering
+`renderProjects()` creates the HTML for each project card and inserts it into the page.
+
+### Filtering
+Filter buttons use JavaScript’s `.filter()` method to show only matching categories.
+
+### Sorting
+The sort dropdown uses `.sort()` to reorder projects by:
+- Date (newest/oldest)
+- Title (A–Z / Z–A)
+
+### Why it matters:
+This demonstrates array manipulation, DOM creation, and dynamic content updates.
+
+---
+
+## 4. Contact Form Validation with Feedback
+
+The contact form uses real-time error checking and user feedback.
+
+### Validation Covers:
+- Empty name field  
+- Invalid email format  
+- Empty message  
+
+### Feedback:
+- Error messages appear under the wrong fields  
+- A success/error banner shows at the top  
+- Form does NOT refresh → handled fully with JS
+
+### Purpose:
+Shows knowledge of form validation, regex, and interactive UI behavior.
+
+---
+
+## 5. GitHub API Integration (fetch & JSON)
+
+The website connects to GitHub’s public API to load real repository data.
+
+### What it does:
+- Fetches the latest 6 repositories from the configured GitHub username  
+- Displays repo name + star count  
+- Handles API errors gracefully (e.g., no internet, wrong username)
+
+### Technology used:
+- `fetch()`  
+- JSON parsing  
+- DOM updates  
+
+---
+
+## 6. Page Visit Timer
+
+A live timer tracks how long the user stays on the page.
+
+### How it works:
+- A `setInterval()` increases a counter every second.
+- The time is displayed dynamically on the page.
+- Updates do not require a page refresh.
+
+### Purpose:
+Demonstrates timers, intervals, and live DOM updates.
+
+---
+
+## Summary
+
+This assignment includes a full set of interactive behaviors required by the rubric, including:
+
+- DOM manipulation  
+- Event listeners  
+- Sorting & filtering  
+- Local Storage  
+- API requests  
+- Form validation  
+- Dynamic rendering  
+- Light/Dark mode  
+- Login simulation  
+- User timers  
+
+All features work together to create a professional and responsive portfolio site.

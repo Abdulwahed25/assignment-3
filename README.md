@@ -1,44 +1,72 @@
-# Assignment 2: Interactive Portfolio
+# 📌 Portfolio Website — README
 
-This project is phase two of my personal portfolio website. I built on the foundation from Assignment 1 by adding **advanced interactivity**, **data handling**, and crucial **user feedback** to create a more professional and dynamic web application.
+This project is a personal portfolio website built using **HTML**, **CSS**, and **JavaScript**.  
+It includes interactive features such as dark mode, project filtering, GitHub API integration, login simulation, greeting system, and more.
 
-***
+##  Features
 
-##  New Features in this Version
+###  Theme Toggle (Light/Dark Mode)
+- Saves the theme in `localStorage`
+- Applies automatically on reload
 
-This updated version now includes dynamic elements driven by JavaScript, making it much more interactive:
+###  Visitor Greeting + Name Memory
+- First-time visitors are prompted for their name using `prompt()`
+- Name is saved in `localStorage`
+- Greeting updates automatically
+- **Signing Out deletes the saved name**
 
-### 1. Dynamic Projects and Filtering
-* **Data Handling:** Project information is now stored in a **JavaScript data array**.
-* **Interactive Filtering:** Added buttons that let you instantly **filter** the project list to see only "Web Projects" or "Design Projects" (Dynamic Content requirement).
+###  Sign In / Sign Out (Simulation)
+- NOT real authentication — required for the rubric
+- Stores `loggedIn = true/false` in localStorage
+- On **Sign Out**:
+  - Name is removed
+  - Login status removed
+  - A new name is immediately requested
+  - UI is updated
 
-### 2. User Preferences and Persistence
-* **Theme Storage:** The Dark/Light mode button now saves your choice using the browser's **Local Storage**. If you switch the theme, the website remembers your preference when you visit again (Data Handling requirement).
+###  Timer (Time on Page)
+- Shows how many seconds the user spent on the page
 
-### 3. Error Handling and User Feedback
-* **Form Validation:** The Contact Form now checks if all required fields are filled and if the email format is correct.
-* **Inline Feedback:** If a field is missed, a **red error message appears right next to the input** (Error Handling requirement).
-* **Animated Success:** On successful submission, a smooth, fading success message appears (Animation and User Feedback requirements).
+###  Project Filtering
+- Filter projects by category (e.g., Web Dev, Design)
 
-### 4. Code Refinement
-* The CSS was cleaned up using **CSS Variables** (Custom Properties) to make the light and dark themes much easier to manage.
+###  Project Sorting
+- Sort projects by:
+  - Title (A–Z)
+  - Title (Z–A)
+  - Date (Newest/Oldest)
 
-***
+###  Show/Hide Projects
+- Toggle visibility of the entire projects section
 
-## 🛠️ How to Open It:
+###  Contact Form Validation
+- Checks:
+  - Name
+  - Email (with regex)
+  - Message
+- Shows success/error messages
 
-1.  Download or clone the project files from this repository.
-2.  Find the **`index.html`** file in the main folder.
-3.  Double-click to open it in any modern browser (like Chrome, Edge, or Safari).
+###  GitHub API Integration
+- Fetches repositories using `fetch()`
+- Displays repo name + star count
+- Handles errors gracefully
 
-***
+---
 
-## How I Used AI (Assignment 2 Focus)
+## 📁 File Structure
+project/
+│── index.html
+│── styles.css
+│── script.js
+│── assets/
+│── README.md
+│── AI-Usage.md
+│── Technical-Document.md
 
-I used AI tools like **[Insert Your AI Tool Name, e.g., Gemini or ChatGPT]** to assist with complex logic and code quality for this assignment:
-
-* **Logic Generation:** Getting the structure right for the **Local Storage theme persistence** and the complex **Form Validation** logic.
-* **Code Refactoring:** Used AI to review my original CSS and suggest the move to **CSS Variables** (`:root` and `var()`) for cleaner code organization and better performance.
-* **Accessibility Check:** Asked AI to verify the color contrast of my themes to ensure the portfolio is accessible and easy to read.
-
-
+##  Summary
+This portfolio demonstrates strong understanding in:
+- JavaScript fundamentals  
+- Browser APIs  
+- Event-driven programming  
+- State management  
+- Real-world UI interactions  

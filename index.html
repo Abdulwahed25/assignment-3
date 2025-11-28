@@ -1,77 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Abdulwahed | Personal Portfolio</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
   <header>
-    <h1>Abdulwahed Zuhair</h1>
-    <p>A student developer with a passion for building creative web solutions.</p>
-    <p id="greeting"></p> <button id="theme-toggle">Toggle Theme</button>
+    <div class="header-inner">
+      <h1>Abdulwahed Zuhair</h1>
+      <p class="subtitle">A student developer with a passion for building creative web solutions.</p>
+      <div class="controls">
+        <p id="greeting" aria-live="polite"></p>
+        <button id="theme-toggle" aria-pressed="false">Toggle Theme</button>
+        <button id="auth-toggle">Sign In</button>
+      </div>
+    </div>
   </header>
 
   <main>
     <section id="about">
       <h2>About Me</h2>
-      <p>I am CS student, currently I am learning front-end web development. I enjoy solving problems and bringing my ideas to life through clean and efficient code.</p>
+      <p>I am a Computer Science student learning front-end development. I enjoy solving problems and bringing ideas to life with clean, efficient code.</p>
       <h3>A little more about me:</h3>
       <ul>
         <li>I love mathematics and enjoy using logic to solve problems.</li>
         <li>I'm passionate about video games and exploring their worlds.</li>
-        <li>I always keep up with the latest in technology, from new phones to software updates.</li>
+        <li>I keep up with the latest in technology, from phones to software.</li>
       </ul>
     </section>
 
-    <section id="projects">
+    <section id="projects-section">
       <h2>My Projects</h2>
-      
-      <div id="filter-controls" style="margin-bottom: 20px;">
+
+      <div class="project-controls">
+        <div id="filter-controls" class="filters" aria-label="Project filters">
           <button data-filter="all">Show All</button>
           <button data-filter="Web Dev">Web Projects</button>
           <button data-filter="Design">Design Projects</button>
+        </div>
+
+        <div class="sort-controls" aria-label="Sort projects">
+          <label for="sort-select">Sort:</label>
+          <select id="sort-select">
+            <option value="date-desc">Newest</option>
+            <option value="date-asc">Oldest</option>
+            <option value="title-asc">Title A→Z</option>
+            <option value="title-desc">Title Z→A</option>
+          </select>
+        </div>
+
+        <div class="toggle-projects">
+          <button id="show-hide-projects">Hide Projects</button>
+        </div>
       </div>
 
-      <div id="projects-container">
-      </div>
-      
-      <p id="empty-state" style="display: none; text-align: center; padding: 20px; color: #555;">
-          No projects found matching the criteria. Try a different filter!
-      </p>
+      <div id="projects-container" class="projects-grid" aria-live="polite"></div>
+
+      <p id="empty-state" class="empty-state" hidden>No projects found matching the criteria. Try a different filter!</p>
+
+      <h3>Latest public GitHub repos</h3>
+      <div id="github-repos" class="github-repos" aria-live="polite">Loading repositories...</div>
     </section>
 
     <section id="contact">
       <h2>Get In Touch</h2>
       <p>Have a question or want to work together? Send me a message!</p>
-      
-      <div id="form-feedback" style="display: none; padding: 10px; margin-bottom: 15px; border-radius: 5px; opacity: 0; transition: opacity 0.5s ease;"></div>
 
-      <form id="contact-form">
+      <div id="form-feedback" class="form-feedback" aria-live="polite" hidden></div>
+
+      <form id="contact-form" novalidate>
         <label for="name">Name:</label>
-        <input type="text" id="name" name="name" required>
-        <p class="error-message" id="name-error" style="color: red; font-size: 0.9em; display: none; margin-top: 5px;">Please enter your name.</p>
-        
+        <input type="text" id="name" name="name" required />
+        <p class="error-message" id="name-error">Please enter your name.</p>
+
         <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <p class="error-message" id="email-error" style="color: red; font-size: 0.9em; display: none; margin-top: 5px;">A valid email is required.</p>
-        
+        <input type="email" id="email" name="email" required />
+        <p class="error-message" id="email-error">A valid email is required.</p>
+
         <label for="message">Message:</label>
-        <textarea id="message" name="message" required></textarea>
-        <p class="error-message" id="message-error" style="color: red; font-size: 0.9em; display: none; margin-top: 5px;">Message cannot be empty.</p>
-        
-        <button type="submit">Send Message</button>
+        <textarea id="message" name="message" rows="5" required></textarea>
+        <p class="error-message" id="message-error">Message cannot be empty.</p>
+
+        <button type="submit" id="send-btn">Send Message</button>
       </form>
+
+      <div class="session-info">
+        <p id="visit-timer">You've been on this page: <span id="timer">0s</span></p>
+      </div>
     </section>
-    </main>
+  </main>
 
   <footer>
     <p>Abdulwahed Zuhair Adi</p>
     <p>Email: s202256380@kfupm.edu.sa</p>
   </footer>
-  <script src="script.js"></script>
 
+  <script src="script.js"></script>
 </body>
 </html>

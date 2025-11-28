@@ -1,192 +1,260 @@
-alert("Welcome to my portfolio!");
+const GITHUB_USERNAME = 'abdulwahed-adi';
 
 const projectsData = [
-    {
-        id: 1,
-        title: "Student Resource Hub",
-        category: "Web Dev",
-        description: "A conceptual design for a web app to help students organize academic resources. The goal is a user-friendly interface to centralize notes, links, and project materials.",
-        image: "assets/images/Gemini_Generated_Image_z1vdwuz1vdwuz1vd.png",
-        details: ["Main page for subjects.", "Note-saving tool.", "Link organizer."]
-    },
-    {
-        id: 2,
-        title: "Gamer's Guide",
-        category: "Design",
-        description: "This is my idea for a go-to website for gamers. It offers honest game reviews, recommendations for what to play next, and helpful guides with tips and tricks to help you get better and find new games.",
-        image: "assets/images/Screenshot 1447-04-02 at 4.59.19 pm.png",
-        details: ["Game search tool.", "Guides for hard levels.", "Player rating system."]
-    },
-    {
-        id: 3,
-        title: "Portfolio Website",
-        category: "Web Dev",
-        description: "This very website! Built with HTML, CSS, and JavaScript, focusing on interactivity, dark mode, and user feedback.",
-        image: "assets/images/unnamed.jpg", 
-        details: ["Dark mode toggle.", "Dynamic greeting.", "Form validation."]
-    }
+  {
+    id: 1,
+    title: 'Student Resource Hub',
+    category: 'Web Dev',
+    description: 'A web app to organize academic resources: notes, links and project materials.',
+    image: 'Gemini_Generated_Image_z1vdwuz1vdwuz1vd.png',
+    date: '2024-08-01',
+    level: 'Beginner'
+  },
+  {
+    id: 2,
+    title: "Gamer's Guide",
+    category: 'Design',
+    description: 'Game reviews, guides and recommendations.',
+    image: 'Screenshot 1447-04-02 at 4.59.19 pm.png',
+    date: '2024-12-10',
+    level: 'Intermediate'
+  },
+  {
+    id: 3,
+    title: 'Portfolio Website',
+    category: 'Web Dev',
+    description: 'This website: interactive features, dark mode and project filtering.',
+    image: 'Screenshot 1447-06-07 at 10.46.23 am.png',
+    date: '2025-01-02',
+    level: 'Advanced'
+  }
 ];
+
+const state = {
+  theme: 'light',
+  loggedIn: localStorage.getItem('loggedIn') === 'true',
+  visitorName: localStorage.getItem('visitorName') || '',
+  projectsVisible: true,
+  filteredCategory: 'all',
+  sortMode: 'date-desc'
+};
 
 const projectsContainer = document.getElementById('projects-container');
 const emptyState = document.getElementById('empty-state');
 const filterControls = document.getElementById('filter-controls');
-
-
-function createProjectCardHTML(project) {
-    return `
-        <div class="project-card">
-            <img src="${project.image}" alt="${project.title} Image" width="300">
-            <h3>${project.title} (${project.category})</h3>
-            <p>${project.description}</p>
-        </div>
-    `;
-}
-
-function renderProjects(projects) {
-    if (!projectsContainer) return;
-
-    projectsContainer.innerHTML = ''; 
-    
-    if (projects.length === 0) {
-        if (emptyState) emptyState.style.display = 'block';
-    } else {
-        if (emptyState) emptyState.style.display = 'none';
-        
-        projects.forEach(project => {
-            projectsContainer.innerHTML += createProjectCardHTML(project);
-        });
-    }
-}
-
-if (filterControls) {
-    filterControls.addEventListener('click', (e) => {
-        if (e.target.tagName === 'BUTTON') {
-            const filterCategory = e.target.getAttribute('data-filter');
-            
-            filterControls.querySelectorAll('button').forEach(btn => btn.classList.remove('active-filter'));
-            e.target.classList.add('active-filter');
-            
-            let filteredProjects;
-            if (filterCategory === 'all') {
-                filteredProjects = projectsData; 
-            } else {
-                filteredProjects = projectsData.filter(project => project.category === filterCategory);
-            }
-            
-            renderProjects(filteredProjects);
-        }
-    });
-}
-
+const sortSelect = document.getElementById('sort-select');
+const showHideProjectsBtn = document.getElementById('show-hide-projects');
+const themeToggle = document.getElementById('theme-toggle');
+const authToggle = document.getElementById('auth-toggle');
+const greetingEl = document.getElementById('greeting');
+const visitTimerEl = document.getElementById('timer');
 
 function applyTheme(theme) {
-    if (theme === 'dark') {
-        document.body.classList.add('dark-mode');
-    } else {
-        document.body.classList.remove('dark-mode');
-    }
+  state.theme = theme;
+  if (theme === 'dark') document.body.classList.add('dark-mode');
+  else document.body.classList.remove('dark-mode');
+  localStorage.setItem('theme', theme);
+  if (themeToggle) themeToggle.setAttribute('aria-pressed', theme === 'dark');
 }
 
 function loadTheme() {
-    const savedTheme = localStorage.getItem('theme');
-    
-    if (savedTheme) {
-        applyTheme(savedTheme);
-    } else {
-        applyTheme('light'); 
+  const saved = localStorage.getItem('theme') || 'light';
+  applyTheme(saved);
+}
+
+function saveVisitorName(name) {
+  state.visitorName = name;
+  localStorage.setItem('visitorName', name);
+}
+
+function formatDate(d) {
+  const date = new Date(d);
+  if (isNaN(date)) return d;
+  return date.toLocaleDateString();
+}
+
+function createProjectCard(project) {
+  const div = document.createElement('article');
+  div.className = 'project-card';
+  div.innerHTML = `
+    <img loading="lazy" src="${project.image}" alt="${project.title} image" />
+    <h3>${project.title} <small>(${project.category})</small></h3>
+    <p>${project.description}</p>
+    <p><small>Level: ${project.level} • Date: ${formatDate(project.date)}</small></p>
+  `;
+  return div;
+}
+
+function sortProjects(list, mode) {
+  const copy = [...list];
+  switch (mode) {
+    case 'date-asc': return copy.sort((a,b) => new Date(a.date) - new Date(b.date));
+    case 'date-desc': return copy.sort((a,b) => new Date(b.date) - new Date(a.date));
+    case 'title-asc': return copy.sort((a,b) => a.title.localeCompare(b.title));
+    case 'title-desc': return copy.sort((a,b) => b.title.localeCompare(a.title));
+    default: return copy;
+  }
+}
+
+function renderProjects(data) {
+  if (!projectsContainer) return;
+  let list = data;
+  if (state.filteredCategory !== 'all') {
+    list = list.filter(p => p.category === state.filteredCategory);
+  }
+  list = sortProjects(list, state.sortMode);
+  projectsContainer.innerHTML = '';
+  if (list.length === 0) {
+    if (emptyState) emptyState.hidden = false;
+    return;
+  }
+  if (emptyState) emptyState.hidden = true;
+  list.forEach(p => projectsContainer.appendChild(createProjectCard(p)));
+}
+
+if (filterControls) {
+  filterControls.addEventListener('click', e => {
+    if (e.target.tagName === 'BUTTON') {
+      const cat = e.target.getAttribute('data-filter');
+      state.filteredCategory = cat;
+      filterControls.querySelectorAll('button').forEach(b => b.classList.remove('active-filter'));
+      e.target.classList.add('active-filter');
+      renderProjects(projectsData);
     }
+  });
 }
 
-let button = document.getElementById("theme-toggle");
-if (button) {
-    button.onclick = function() {
-        const isDarkMode = document.body.classList.contains('dark-mode');
-        let newTheme = isDarkMode ? 'light' : 'dark';
-        
-        applyTheme(newTheme);
-        localStorage.setItem('theme', newTheme);
-    };
+if (sortSelect) {
+  sortSelect.addEventListener('change', e => {
+    state.sortMode = e.target.value;
+    renderProjects(projectsData);
+  });
 }
 
+if (showHideProjectsBtn) {
+  showHideProjectsBtn.addEventListener('click', () => {
+    state.projectsVisible = !state.projectsVisible;
+    const section = document.getElementById('projects-section');
+    if (section) section.style.display = state.projectsVisible ? 'block' : 'none';
+    showHideProjectsBtn.textContent = state.projectsVisible ? 'Hide Projects' : 'Show Projects';
+  });
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => applyTheme(state.theme === 'dark' ? 'light' : 'dark'));
+}
+
+function handleSignOut() {
+  localStorage.removeItem('loggedIn');
+  localStorage.removeItem('visitorName');
+  state.loggedIn = false;
+  state.visitorName = '';
+  authToggle.textContent = 'Sign In';
+  setTimeout(() => {
+    const name = prompt("You've signed out. Enter your name to continue:");
+    if (name && name.trim()) saveVisitorName(name.trim());
+    updateGreeting();
+  }, 300);
+}
+
+if (authToggle) {
+  authToggle.addEventListener('click', () => {
+    if (state.loggedIn) handleSignOut();
+    else {
+      state.loggedIn = true;
+      localStorage.setItem('loggedIn', 'true');
+      authToggle.textContent = 'Sign Out';
+    }
+  });
+}
 
 const contactForm = document.getElementById('contact-form');
 const formFeedback = document.getElementById('form-feedback');
 
-function validateForm() {
-    let isValid = true;
-    const fields = [
-        { id: 'name', errorId: 'name-error', message: 'Please enter your name.' },
-        { id: 'email', errorId: 'email-error', message: 'A valid email is required.' },
-        { id: 'message', errorId: 'message-error', message: 'Message cannot be empty.' }
-    ];
-    
-    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+function showFormFeedback(type, message) {
+  if (!formFeedback) return;
+  formFeedback.hidden = false;
+  formFeedback.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+  formFeedback.style.color = type === 'success' ? '#155724' : '#721c24';
+  formFeedback.textContent = message;
+}
 
-    fields.forEach(field => {
-        const input = document.getElementById(field.id);
-        const errorEl = document.getElementById(field.errorId);
-        
-        if (input.value.trim() === '') {
-            errorEl.innerText = field.message;
-            errorEl.style.display = 'block'; 
-            isValid = false;
-        } 
-        else if (field.id === 'email' && !/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(input.value)) {
-             errorEl.innerText = 'Please enter a valid email address (e.g., example@domain.com).';
-             errorEl.style.display = 'block';
-             isValid = false;
-        }
-    });
-
-    return isValid;
+function validateEmail(email) {
+  return /^\S+@\S+\.\S+$/.test(email);
 }
 
 if (contactForm) {
-    contactForm.onsubmit = function(e) {
-        e.preventDefault();
-        
-        if(formFeedback) formFeedback.style.opacity = '0';
-        
-        if (validateForm()) {
-            if(formFeedback) {
-                formFeedback.style.backgroundColor = '#d4edda'; 
-                formFeedback.style.color = '#155724'; 
-                formFeedback.innerHTML = '<strong>Success!</strong> Your message has been sent (simulated). Thank you!';
-                formFeedback.style.display = 'block';
-                setTimeout(() => { formFeedback.style.opacity = '1'; }, 10); 
-            }
-            contactForm.reset();
-            
-        } else {
-            if(formFeedback) {
-                formFeedback.style.backgroundColor = '#f8d7da'; 
-                formFeedback.style.color = '#721c24'; 
-                formFeedback.innerHTML = '<strong>Error!</strong> Please correct the highlighted fields.';
-                formFeedback.style.display = 'block';
-                setTimeout(() => { formFeedback.style.opacity = '1'; }, 10); 
-            }
-        }
-    };
+  contactForm.addEventListener('submit', e => {
+    e.preventDefault();
+    const name = document.getElementById('name');
+    const email = document.getElementById('email');
+    const message = document.getElementById('message');
+    document.querySelectorAll('.error-message').forEach(el => el.style.display = 'none');
+    let ok = true;
+    if (!name.value.trim()) { document.getElementById('name-error').style.display = 'block'; ok = false; }
+    if (!email.value.trim() || !validateEmail(email.value)) { document.getElementById('email-error').style.display = 'block'; ok = false; }
+    if (!message.value.trim()) { document.getElementById('message-error').style.display = 'block'; ok = false; }
+    if (!ok) { showFormFeedback('error', 'Please correct the highlighted fields.'); return; }
+    showFormFeedback('success', 'Success! Your message has been sent (simulated).');
+    contactForm.reset();
+  });
+}
+
+function updateGreeting() {
+  if (!greetingEl) return;
+  if (state.visitorName) greetingEl.textContent = `Welcome back, ${state.visitorName}!`;
+  else {
+    const hour = new Date().getHours();
+    const msg = hour < 12 ? 'Good Morning!' : (hour < 18 ? 'Good Afternoon!' : 'Good Evening!');
+    greetingEl.textContent = msg;
+  }
+}
+
+function promptForNameIfNeeded() {
+  if (!state.visitorName) {
+    setTimeout(() => {
+      const name = prompt('Hi! What is your name?');
+      if (name && name.trim()) saveVisitorName(name.trim());
+      updateGreeting();
+    }, 900);
+  }
+}
+
+let secondsOnPage = 0;
+setInterval(() => {
+  secondsOnPage += 1;
+  if (visitTimerEl) visitTimerEl.textContent = `${secondsOnPage}s`;
+}, 1000);
+
+async function fetchGitHubRepo() {
+  const container = document.getElementById('github-repos');
+  if (!container) return;
+  container.textContent = 'Loading repository...';
+  try {
+    const res = await fetch('https://api.github.com/repos/Abdulwahed25/assignment-3');
+    if (!res.ok) throw new Error(`GitHub error: ${res.status}`);
+    const repo = await res.json();
+    container.innerHTML = '';
+    const p = document.createElement('p');
+    const a = document.createElement('a');
+    a.href = repo.html_url;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+    a.textContent = `${repo.name} —  ${repo.stargazers_count}`;
+    p.appendChild(a);
+    container.appendChild(p);
+  } catch (err) {
+    container.textContent = 'Could not load assignment-3 repository.';
+  }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    loadTheme(); 
-    
-    renderProjects(projectsData);
-    const initialFilterButton = filterControls ? filterControls.querySelector('[data-filter="all"]') : null;
-    if (initialFilterButton) {
-        initialFilterButton.classList.add('active-filter'); 
-    }
-    
-    let hour = new Date().getHours();
-    let message = "";
-    if (hour < 12) {
-      message = "Good Morning!";
-    } else if (hour < 18) {
-      message = "Good Afternoon!";
-    } else {
-      message = "Good Evening!";
-    }
-    const greetingElement = document.getElementById("greeting");
-    if (greetingElement) greetingElement.innerText = message;
+  loadTheme();
+  if (authToggle) authToggle.textContent = state.loggedIn ? 'Sign Out' : 'Sign In';
+  updateGreeting();
+  promptForNameIfNeeded();
+  renderProjects(projectsData);
+  const initialFilter = filterControls ? filterControls.querySelector('[data-filter="all"]') : null;
+  if (initialFilter) initialFilter.classList.add('active-filter');
+  fetchGitHubRepo();
 });
